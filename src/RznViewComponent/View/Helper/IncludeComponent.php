@@ -20,12 +20,12 @@ class IncludeComponent extends AbstractHelper implements ServiceLocatorAwareInte
      */
     protected $serviceLocator;
 
-
-
-    public function __construct()
-    {
-
-    }
+    /**
+     * Configuration array.
+     *
+     * @var array
+     */
+    protected $config = array();
 
     /**
      * @param $service aim service name
@@ -35,6 +35,40 @@ class IncludeComponent extends AbstractHelper implements ServiceLocatorAwareInte
      * @return Result
      */
     public function __invoke($service, $template, $inputData = array(), $params = array())
+    {
+        $applicationService = $this->serviceLocator->getServiceLocator();
+        if ($this->config['cache_allow'] and $this->config['cache_service'])
+            $cache = $this->config['cache_service'];
+        else
+            $cache = false;
+
+        if ($cache) {
+            $cacheKey = $this->_buildCacheKey($service, $template, $inputData);
+            $result = $applicationService->get($this->config['cache_service'])->getItem($cacheKey);
+            if (!empty($result)) {
+                return $result;
+                $result = @unserialize($result);
+                if ($result)
+                {
+                    return $result;
+                }
+            }
+        }
+
+        $result = $this-> _getResult($service, $template, $inputData, $params);
+        if ($cache) {
+            $applicationService->get($this->config['cache_service'])->addItem($cacheKey, $result);
+        }
+        return $result;
+    }
+
+
+    protected function _buildCacheKey($service, $template, $inputData)
+    {
+        return md5($service . '__' . $template . '__' . serialize($inputData));
+    }
+
+    protected function _getResult($service, $template, $inputData, $params)
     {
         $resultData = array();
         if ($this->serviceLocator->has($service))
@@ -69,6 +103,14 @@ class IncludeComponent extends AbstractHelper implements ServiceLocatorAwareInte
         {
             $resultData = call_user_func(array($service, $params['result_function']));
         }
+        else if (isset($params['result_functions_map']))
+        {
+            $resultData = array();
+            foreach($params['result_functions_map'] as $key => $value)
+            {
+                $resultData[$key] = call_user_func(array($service, $value));
+            }
+        }
 
         $result = new Result();
 
@@ -96,6 +138,14 @@ class IncludeComponent extends AbstractHelper implements ServiceLocatorAwareInte
     public function setServiceLocator(ServiceLocatorInterface $serviceLocator)
     {
         $this->serviceLocator = $serviceLocator;
+
+        $config = $serviceLocator->getServiceLocator()->get('config');
+
+        if (isset($config['rznviewcomponent']))
+        {
+            $this->config = $config['rznviewcomponent'];
+        }
+
         return $this;
     }
 
