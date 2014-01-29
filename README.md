@@ -7,7 +7,7 @@ The plugin includes three elements: service, view and cache.
 
 Example:
 		
-	<?= $this-includeComponent('bank-info', 	
+	<?= $this->includeComponent('bank-info', 	
                                'component/bank-info', 	
                                array('id' = $this-id), 
                                array()) ?>
