@@ -49,5 +49,5 @@ The plugin includes three elements: service, view and cache.
    ...
 ```
 
-## Finaly
+## Finally
  Plugin can be used. The detailed description will be provided later.
