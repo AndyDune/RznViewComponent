@@ -5,7 +5,7 @@ A ZF2 module that add view helper IncludeComponent.
 
 The plugin includes three elements: service, view and cache.
 
-Exemple:
+Example:
 		
 	<?= $this-includeComponent('bank-info', 	
                                'component/bank-info', 	
