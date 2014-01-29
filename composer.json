@@ -2,6 +2,7 @@
     "name": "andydune/rzn-view-component",
     "description": "View component module for ZF2.",
     "type": "library",
+    "license": "MIT",
     "keywords": [
         "zf2", "rzn", "php", "component"
     ],
