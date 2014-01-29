@@ -112,21 +112,24 @@ class IncludeComponent extends AbstractHelper implements ServiceLocatorAwareInte
             }
         }
 
-        $result = new Result();
 
-        if (isset($params['result_key_return']))
+        $html = $this->getView()->partial($template, $resultData);
+        if ($this->config['use_result_object'])
         {
-            foreach($params['result_key_return'] as $value)
+            $result = new Result();
+
+            if (isset($params['result_key_return']))
             {
-                if (isset($resultData[$value]))
-                    $result[$value] = $resultData[$value];
+                foreach($params['result_key_return'] as $value)
+                {
+                    if (isset($resultData[$value]))
+                        $result[$value] = $resultData[$value];
+                }
             }
+            $result->setHtml($html);
+            return $result;
         }
-
-
-        $result->setHtml($this->getView()->partial($template, $resultData));
-
-        return $result;
+        return $html;
     }
 
     /**

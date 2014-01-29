@@ -3,10 +3,14 @@ return array(
 
     'rznviewcomponent' => array(
         'cache_service' => 'cache',
-        'cache_allow'   => true,
-        'view_script_prefix' => ''
+        'cache_allow'   => false,
+        'view_script_prefix' => '',
+        'use_result_object' => false
     ),
-
+    /**
+     * cache service described here just for test.
+     * Later it will be removed.
+     */
     'service_manager' => array(
         'factories' => array(
             'Zend\Cache\StorageFactory' => function() {
