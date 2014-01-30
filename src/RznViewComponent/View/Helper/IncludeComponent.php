@@ -44,14 +44,24 @@ class IncludeComponent extends AbstractHelper implements ServiceLocatorAwareInte
 
         if ($cache) {
             $cacheKey = $this->_buildCacheKey($service, $template, $inputData);
-            $result = $applicationService->get($this->config['cache_service'])->getItem($cacheKey);
-            if (!empty($result)) {
-                return $result;
-                $result = @unserialize($result);
-                if ($result)
-                {
+            /** @var \Zend\Cache\Storage\StorageInterface $cacheService */
+            $cacheService = $applicationService->get($this->config['cache_service']);
+            if ($this->config['cache_remove_item_key']
+                and isset($_GET[$this->config['cache_remove_item_key']])
+                and $_GET[$this->config['cache_remove_item_key']]) {
+                $cacheService->removeItem($cacheKey);
+                $cache = false;
+            }
+            else {
+                $result = $cacheService->getItem($cacheKey);
+                if (!empty($result)) {
                     return $result;
+                    $result = @unserialize($result);
+                    if ($result) {
+                        return $result;
+                    }
                 }
+
             }
         }
 
@@ -76,21 +86,16 @@ class IncludeComponent extends AbstractHelper implements ServiceLocatorAwareInte
         else
             $service = $this->serviceLocator->getServiceLocator()->get($service);
 
-        if ($service instanceof ComponentInterface)
-        {
+        if ($service instanceof ComponentInterface) {
             $service->setInitialData($inputData);
             $resultData = $service->getResultData();
         }
-        else if (isset($params['initial_function']))
-        {
+        else if (isset($params['initial_function'])) {
             call_user_func(array($service, $params['initial_method']), $inputData);
         }
-        else if (isset($params['initial_functions_map']))
-        {
-            foreach($params['initial_functions_map'] as $key => $value)
-            {
-                if (isset($inputData[$key]))
-                {
+        else if (isset($params['initial_functions_map'])) {
+            foreach($params['initial_functions_map'] as $key => $value) {
+                if (isset($inputData[$key])) {
                     if (is_array($inputData[$key]))
                         call_user_func_array(array($service, $value), $inputData[$key]);
                     else
@@ -99,29 +104,23 @@ class IncludeComponent extends AbstractHelper implements ServiceLocatorAwareInte
             }
         }
 
-        if (isset($params['result_function']))
-        {
+        if (isset($params['result_function'])) {
             $resultData = call_user_func(array($service, $params['result_function']));
         }
-        else if (isset($params['result_functions_map']))
-        {
+        else if (isset($params['result_functions_map'])) {
             $resultData = array();
-            foreach($params['result_functions_map'] as $key => $value)
-            {
+            foreach($params['result_functions_map'] as $key => $value) {
                 $resultData[$key] = call_user_func(array($service, $value));
             }
         }
 
 
         $html = $this->getView()->partial($template, $resultData);
-        if ($this->config['use_result_object'])
-        {
+        if ($this->config['use_result_object']) {
             $result = new Result();
 
-            if (isset($params['result_key_return']))
-            {
-                foreach($params['result_key_return'] as $value)
-                {
+            if (isset($params['result_key_return'])) {
+                foreach($params['result_key_return'] as $value) {
                     if (isset($resultData[$value]))
                         $result[$value] = $resultData[$value];
                 }
@@ -144,8 +143,7 @@ class IncludeComponent extends AbstractHelper implements ServiceLocatorAwareInte
 
         $config = $serviceLocator->getServiceLocator()->get('config');
 
-        if (isset($config['rznviewcomponent']))
-        {
+        if (isset($config['rznviewcomponent'])) {
             $this->config = $config['rznviewcomponent'];
         }
 
