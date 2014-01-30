@@ -1,10 +1,9 @@
 <?php
 /**
- * Zend Framework (http://framework.zend.com/)
+ * Andrey Ryzhov (http://rznw.ru/)
  *
- * @link      http://github.com/zendframework/ZendSkeletonApplication for the canonical source repository
- * @copyright Copyright (c) 2005-2013 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   http://framework.zend.com/license/new-bsd New BSD License
+ * @link      http://github.com/AndyDune/RznViewComponent for the canonical source repository
+ * @license   The MIT License (MIT)
  */
 
 namespace RznViewComponent;
@@ -19,6 +18,51 @@ class Module
     {
         return include __DIR__ . '/config/module.config.php';
     }
+
+
+    public function getViewHelperConfig()
+    {
+        return array(
+            'invokables' => array(
+                'includeComponent' => 'RznViewComponent\View\Helper\IncludeComponent',
+            ),
+        );
+    }
+
+    public function getServiceConfig()
+    {
+        return array (
+            'factories' => array(
+                'cache_view_component' => function($sm) {
+                        $config = $sm->get('config');
+                        if (isset($config['rznviewcomponent']['cache_adapter']))
+                        {
+                            $adapter = $config['rznviewcomponent']['cache_adapter'];
+                        }
+                        else
+                            $adapter = array(
+                                'name' => 'filesystem',
+                                'options' => array(
+                                    'ttl' => 3600,
+                                    'dirLevel' => 2,
+                                    'file_locking' => false,
+                                    'cacheDir' => 'data/cache',
+                                    'dirPermission' => 0755,
+                                    'filePermission' => 0666,
+                                ),
+                            );
+
+                        return \Zend\Cache\StorageFactory::factory(
+                            array(
+                                'adapter' => $adapter,
+                                'plugins' => array('serializer'),
+                            )
+                        );
+                    }
+            )
+        );
+    }
+
 
     public function getAutoloaderConfig()
     {
