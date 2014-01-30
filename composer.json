@@ -1,0 +1,29 @@
+{
+    "name": "andydune/rzn-view-component",
+    "description": "View component module for ZF2.",
+    "type": "library",
+    "license": "MIT",
+    "keywords": [
+        "zf2", "rzn", "php", "component"
+    ],
+    "homepage": "https://github.com/AndyDune/RznViewComponent",
+    "authors": [
+        {
+            "name": "Andrey Ryzhov",
+            "email": "m@1rzn.ru",
+            "homepage": "http://rznw.ru"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.3",
+        "zendframework/zendframework": "2.*"
+    },
+    "autoload": {
+        "psr-0": {
+            "RznViewComponent": "src/"
+        },
+        "classmap": [
+            "./Module.php"
+        ]
+    }
+}
