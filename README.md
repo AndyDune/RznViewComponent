@@ -88,7 +88,7 @@ Configuration array for Zend cache factory. Here is default values.
 
 #### 3. cache_remove_item_key
 
-Parameter specifies the name of a variable from a query, and a positive value which resets the cache component of the current sute page. Specify a blank value, if you want to disable this ability.
+Parameter specifies the name of a variable from a query, a positive value which resets the cache component of the current site page. Specify a blank value, if you want to disable this ability.
 
 
 Example: `http://mymegasite.com/catalog/frogs.html?slay_component_cache=1`
