@@ -1,7 +1,7 @@
 RznViewComponent
 ================
 
-A ZF2 module that add view helper IncludeComponent.
+A ZF2 module that add view helper IncludeComponent. Lightweight instrument for insert into the page a finished local block witch implements chain: model-template-cache.
 
 The plugin includes three elements: service, view and cache.
 
