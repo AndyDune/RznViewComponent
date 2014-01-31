@@ -107,5 +107,9 @@ Example:
 Value for `title` comes from data array which service `bank-info` transfers into view.
 Result object implements array interface and has magic function `__toString`.
 
+### Examples
+
+Please see [EXAMPLES.md](EXAMPLES.md).
+
 ## Finally
  Plugin can be used. The detailed description will be provided later.
