@@ -29,6 +29,15 @@ class Module
         );
     }
 
+    public function getControllerPluginConfig()
+    {
+        return array (
+            'invokables' => array(
+                'includeComponent' => 'RznViewComponent\Service\IncludeControllerComponent',
+            )
+        );
+    }
+
     public function getServiceConfig()
     {
         return array (
