@@ -23,13 +23,33 @@ class IncludeControllerComponent implements ServiceLocatorAwareInterface, Plugin
 
     protected function _getResult($method, $template, $inputData, $params)
     {
+        $resultData = call_user_func_array(array($this->getController(), $method), $inputData);
+        $html = call_user_func_array($this->_getViewPartial(), array($template, $resultData));
 
+        if ($this->config['use_result_object']) {
+            $result = new Result();
+            if (isset($params['result_key_return'])) {
+                foreach($params['result_key_return'] as $value) {
+                    if (isset($resultData[$value]))
+                        $result[$value] = $resultData[$value];
+                }
+            }
+            $result->setHtml($html);
+            return $result;
+        }
+        return $html;
     }
 
 
-    protected function _buildCacheKey($service, $template, $inputData)
+    protected function _buildCacheKey($method, $template, $inputData)
     {
-        return md5('IncludeControllerComponent' . $service . '__' . $template . '__' . serialize($inputData));
+        return md5('IncludeControllerComponent' . $method . '__' . $template . '__' . serialize($inputData));
+    }
+
+
+    protected function _getViewPartial()
+    {
+        return $this->getServiceLocator()->getServiceLocator()->get('ViewHelperManager')->get('partial');
     }
 
 
