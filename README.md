@@ -35,10 +35,7 @@ The plugin includes three elements: service, view and cache.
     }
 ```
 
-#### 2. Create *rzn-view-component.global.php* in *config/autoload* with configuration (/config/module.config.php) if you need to change configuration.
-```
-    /module.config.php to /config/autoload/rzn-view-component.global.php
-```
+#### 2. Copy config file (`rzn-view-component.global.php`) to your application autoload dir if you need to change basic configuration.
 
 #### 3. Add module to application config (/config/application.config.php)
 ```
