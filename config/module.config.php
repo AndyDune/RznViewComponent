@@ -1,4 +1,10 @@
 <?php
+/**
+ * RznViewComponent Module (https://github.com/AndyDune/RznViewComponent)
+ *
+ * @link https://github.com/AndyDune/RznViewComponent for the canonical source repository
+ * @license http://www.opensource.org/licenses/mit-license.php  MIT License
+ */
 return array(
     'rznviewcomponent' => array(
         'cache_service' => 'cache_view_component',
